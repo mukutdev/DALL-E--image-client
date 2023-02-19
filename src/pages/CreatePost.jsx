@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
 import preview from '../assets/preview.png'
 import Loader from '../components/Loader';
+import { getRandomPrompt } from '../utility';
 
 const CreatePost = () => {
 
@@ -15,15 +16,22 @@ const CreatePost = () => {
     const [generatingImg , setGeneratingImg] = useState(false)
     const [loading , setLoading] = useState(false)
 
+    const generateImg = ()=>{
+
+    }
 
     const handleSubmitForm = ()=>{
 
     }
 
     const handleChange = e =>{
+        setForm({...form , [e.target.name] : [e.target.value]})
 
     }
     const handleSurpriseMe = ()=>{
+
+        const randomPrompt = getRandomPrompt()
+        setForm({...form , prompt : randomPrompt})
 
     }
 
@@ -55,7 +63,7 @@ const CreatePost = () => {
                     handleSurpriseMe={handleSurpriseMe}
                     />
                 </div>
-                <div className='relative bg-gray-50 border border-gray-300 text-slate-700 rounded-lg text-sm
+                <div className='relative mt-10 bg-gray-50 border border-gray-300 text-slate-700 rounded-lg text-sm
                 focus:ring-indigo-700 focus:border-indigo-700 w-64 p-3 h-64 flex justify-center items-center'>
                     {
                     form.photo ?(
@@ -73,6 +81,27 @@ const CreatePost = () => {
                         )
                     }
                 </div>
+
+                <div className='mt-5'>
+                    <button type='button' onClick={generateImg}
+                    className="text-white bg-green-700 text-sm font-medium w-full sm:w-auto rounded-md px-3 py-2 text-center"
+                    >
+                        {
+                            generatingImg ? 'Generating....' : 'Generate'
+                        }
+
+                    </button>
+
+                </div>
+                <div className='mt-10'>
+                    <p className='mt-2 text-slate-500 text-sm'>Once you created you can share it to the community</p>
+                </div>
+                <button className='mt-3 text-white bg-indigo-700 px-5 py-3 rounded-md w-full sm:w-auto text-center
+                text-sm'>
+                        {
+                            loading ? 'Sharing' : 'Share with community'
+                        }
+                </button>
             </form>
         </section>
     );
