@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import FormField from '../components/FormField';
 import Loader from '../components/Loader';
@@ -15,8 +15,38 @@ const RenderCards = ({data , title})=>{
 const Home = () => {
 
     const [loading , setLoading] = useState(false)
-    const [AllPosts , setAllPosts] = useState(null)
-    const [searchText , setSearchText] = useState('avbf')
+    const [allPosts , setAllPosts] = useState(null)
+    const [searchText , setSearchText] = useState(null)
+
+        const fetchingPosts = async()=>{
+            setLoading(true)
+            try {
+
+                const response = await fetch('http://localhost:8080/api/v1/post',{
+                    method : "GET",
+                    headers :{
+                        'Content-Type' : 'application/json'
+                    },
+                })
+
+                if(response.ok){
+                    const result = await response.json()
+                    console.log(result);
+                    setAllPosts(result.data.reverse())
+                }
+                
+            } catch (error) {
+                alert(error)
+            }
+            finally{
+                setLoading(false)
+            }
+        }
+
+        useEffect(()=>{
+            fetchingPosts()
+        } ,[])
+
     return (
         <section className='max-w-7xl mx-auto'>
             <div>
@@ -49,7 +79,7 @@ const Home = () => {
                                 />
                             ) : (
                             <RenderCards 
-                            data={[]}
+                            data={allPosts}
                             title="No posts found"
                             />
     )
