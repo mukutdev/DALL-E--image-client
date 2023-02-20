@@ -16,7 +16,33 @@ const CreatePost = () => {
     const [generatingImg , setGeneratingImg] = useState(false)
     const [loading , setLoading] = useState(false)
 
-    const generateImg = ()=>{
+    const generateImg = async()=>{
+        console.log(form.prompt);
+        // const requestBody = { prompt: form.prompt };
+        if(form.prompt){
+            try {
+                setGeneratingImg(true)
+                const response = await fetch('http://localhost:8080/api/v1/dalle',{
+                    method : 'POST',
+                    headers :{
+                        'Content-Type' : 'application/json',
+                    },
+                    body : JSON.stringify({ prompt: form.prompt} )
+                })
+
+                const data = await response.json()
+                console.log(data);
+                setForm({...form , photo : `data:image/jpeg;base64,${data.photo}`})
+                
+            } catch (error) {
+             alert(error)   
+            }
+            finally{
+                setGeneratingImg(false)
+            }
+        }else{
+            alert('Please enter prompt')
+        }
 
     }
 
@@ -45,7 +71,7 @@ const CreatePost = () => {
             <form className='mt-16 max-w-3xl' onSubmit={handleSubmitForm}>
                 <div className='flex flex-col gap-5'>
                     <FormField
-                    LabelName="Prompt"
+                    LabelName="Name"
                     type="text"
                     name="name"
                     placeholder="Mukut"
